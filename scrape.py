@@ -53,13 +53,33 @@ def login_and_scrape(url, output_file):
     # Wait for the page to load after login
     time.sleep(5)  # Adjust the sleep time as needed
 
+    page_source = driver.page_source
+    with open('page_source_after_login.html', 'w', encoding='utf-8') as f:
+        f.write(page_source)
+    print("Page source after login saved to page_source_after_login.html")
+
+
     # Navigate to the target page after logging in
     driver.get(url)
-    time.sleep(5)  # Wait for the page to load
+    time.sleep(20)  # Wait for the page to load
 
-    # Get the page source and close Selenium
     page_source = driver.page_source
-    driver.quit()
+    with open('exported_page.html', 'w', encoding='utf-8') as f:
+        f.write(page_source)
+    print("Page source saved to exported_page.html")
+
+        # Find and click the "Close Menu" button to remove any overlays
+    try:
+        close_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, '-default-course-player-topbar-back-arrow'))
+        )
+        close_button.click()
+        time.sleep(5)  # Give it a moment to close the menu
+    except:
+        print("Close menu button not found or could not be clicked.")
+
+    # Get the page source
+    page_source = driver.page_source
 
     # Parse the HTML with BeautifulSoup
     soup = BeautifulSoup(page_source, 'html.parser')
@@ -88,10 +108,13 @@ def login_and_scrape(url, output_file):
     with open('pretty_output.html', 'w', encoding='utf-8') as html_file:
         html_file.write(soup.prettify())
 
+    #close Selenium
+    driver.quit()
+
     print("Content extracted and saved to output.mdx")
 
 # Usage
 login_and_scrape(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-on&unit=6681516e59b7881aa000042cUnit', 
+    'https://learn.schoolofcode.co.uk/path-player?courseid=lrn-achievements&unit=667536b302a6de374f0187f9Unit', 
     'output.mdx'  
 )
