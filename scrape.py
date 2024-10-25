@@ -71,24 +71,36 @@ def login_and_scrape(url, output_file):
     # Parse the HTML with BeautifulSoup
     soup = BeautifulSoup(iframe_source, 'html.parser')
 
+    # Extract the inner text of the HTML
+    inner_text = soup.get_text(separator='\n', strip=True)
+    # Save the inner text to a file
+    with open(output_file, 'w', encoding='utf-8') as text_file:
+        text_file.write(inner_text)
+
+        # Optional: Save prettified HTML to a file for debugging
+    with open('pretty_output.html', 'w', encoding='utf-8') as html_file:
+        html_file.write(soup.prettify())
+   
+
      # Extract target content (example: extracting all paragraphs)
     # content = '\n'.join(p.text for p in soup.find_all('p'))
+    
 
-    content = soup.prettify()
-    # Extract all elements individually with tag names and attributes
-    elements = []
-    for element in soup.find_all(True):  # True finds all tags
-        tag_name = element.name
-        attributes = element.attrs
-        inner_text = element.get_text(strip=True)
-        elements.append({
-            "tag": tag_name,
-            "attributes": attributes,
-            "text": inner_text
-        })
+    # content = soup.prettify()
+    # # Extract all elements individually with tag names and attributes
+    # elements = []
+    # for element in soup.find_all(True):  # True finds all tags
+    #     tag_name = element.name
+    #     attributes = element.attrs
+    #     inner_text = element.get_text(strip=True)
+    #     elements.append({
+    #         "tag": tag_name,
+    #         "attributes": attributes,
+    #         "text": inner_text
+    #     })
 
 # Convert each element to a string format and join them
-    content = '\n'.join([f"<{el['tag']} {el['attributes']}>{el['text']}</{el['tag']}>" for el in elements])
+    # content = '\n'.join([f"<{el['tag']} {el['attributes']}>{el['text']}</{el['tag']}>" for el in elements])
 
     # Extract the CSRF token from the meta tag within the head
     csrf_meta = soup.find('meta', {'name': 'csrf-token'})
