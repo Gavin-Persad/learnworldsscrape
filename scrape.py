@@ -71,8 +71,14 @@ def login_and_scrape(url, output_file):
     # Parse the HTML with BeautifulSoup
     soup = BeautifulSoup(iframe_source, 'html.parser')
 
+       # Find the specific <div> with the class and ID
+    target_div = soup.find('div', {'id': 'pageContent'})
+    if target_div:
+        # Extract the inner text of the specific <div>
+        inner_text = target_div.get_text(separator='\n', strip=True)
+
     # Extract the inner text of the HTML
-    inner_text = soup.get_text(separator='\n', strip=True)
+    # inner_text = soup.get_text(separator='\n', strip=True)
     # Save the inner text to a file
     with open(output_file, 'w', encoding='utf-8') as text_file:
         text_file.write(inner_text)
@@ -111,7 +117,7 @@ def login_and_scrape(url, output_file):
 
     
    # Convert to Markdown (simple example)
-    markdown_content = f"## Extracted Content\n\n{content}"
+    markdown_content = f"## Extracted Content\n\n{inner_text}"
 
     # Save to an MDX file with front matter
     with open(output_file, 'w', encoding='utf-8') as mdx_file:
