@@ -53,11 +53,6 @@ def login_and_scrape(url, output_file):
     # Wait for the page to load after login
     time.sleep(5)  # Adjust the sleep time as needed
 
-    page_source = driver.page_source
-    with open('page_source_after_login.html', 'w', encoding='utf-8') as f:
-        f.write(page_source)
-    print("Page source after login saved to page_source_after_login.html")
-
 
     # Navigate to the target page after logging in
     driver.get(url)
@@ -70,21 +65,30 @@ def login_and_scrape(url, output_file):
 
     iframe_source = driver.page_source
 
-        # Find and click the "Close Menu" button to remove any overlays
-    # try:
-    #     close_button = WebDriverWait(driver, 10).until(
-    #         EC.element_to_be_clickable((By.CLASS_NAME, '-default-course-player-topbar-back-arrow'))
-    #     )
-    #     close_button.click()
-    #     time.sleep(5)  # Give it a moment to close the menu
-    # except:
-    #     print("Close menu button not found or could not be clicked.")
-
     # Get the page source
     page_source = driver.page_source
 
     # Parse the HTML with BeautifulSoup
     soup = BeautifulSoup(iframe_source, 'html.parser')
+
+     # Extract target content (example: extracting all paragraphs)
+    # content = '\n'.join(p.text for p in soup.find_all('p'))
+
+    content = soup.prettify()
+    # Extract all elements individually with tag names and attributes
+    elements = []
+    for element in soup.find_all(True):  # True finds all tags
+        tag_name = element.name
+        attributes = element.attrs
+        inner_text = element.get_text(strip=True)
+        elements.append({
+            "tag": tag_name,
+            "attributes": attributes,
+            "text": inner_text
+        })
+
+# Convert each element to a string format and join them
+    content = '\n'.join([f"<{el['tag']} {el['attributes']}>{el['text']}</{el['tag']}>" for el in elements])
 
     # Extract the CSRF token from the meta tag within the head
     csrf_meta = soup.find('meta', {'name': 'csrf-token'})
@@ -93,8 +97,6 @@ def login_and_scrape(url, output_file):
     else:
         raise ValueError("CSRF token not found")
 
-    # Extract target content (example: extracting all paragraphs)
-    content = '\n'.join(p.text for p in soup.find_all('p'))
     
    # Convert to Markdown (simple example)
     markdown_content = f"## Extracted Content\n\n{content}"
