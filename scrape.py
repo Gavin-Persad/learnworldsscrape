@@ -63,26 +63,28 @@ def login_and_scrape(url, output_file):
     driver.get(url)
     time.sleep(20)  # Wait for the page to load
 
-    page_source = driver.page_source
-    with open('exported_page.html', 'w', encoding='utf-8') as f:
-        f.write(page_source)
-    print("Page source saved to exported_page.html")
+    iframe = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.TAG_NAME, 'iframe'))
+    )
+    driver.switch_to.frame(iframe)
+
+    iframe_source = driver.page_source
 
         # Find and click the "Close Menu" button to remove any overlays
-    try:
-        close_button = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.CLASS_NAME, '-default-course-player-topbar-back-arrow'))
-        )
-        close_button.click()
-        time.sleep(5)  # Give it a moment to close the menu
-    except:
-        print("Close menu button not found or could not be clicked.")
+    # try:
+    #     close_button = WebDriverWait(driver, 10).until(
+    #         EC.element_to_be_clickable((By.CLASS_NAME, '-default-course-player-topbar-back-arrow'))
+    #     )
+    #     close_button.click()
+    #     time.sleep(5)  # Give it a moment to close the menu
+    # except:
+    #     print("Close menu button not found or could not be clicked.")
 
     # Get the page source
     page_source = driver.page_source
 
     # Parse the HTML with BeautifulSoup
-    soup = BeautifulSoup(page_source, 'html.parser')
+    soup = BeautifulSoup(iframe_source, 'html.parser')
 
     # Extract the CSRF token from the meta tag within the head
     csrf_meta = soup.find('meta', {'name': 'csrf-token'})
@@ -93,7 +95,7 @@ def login_and_scrape(url, output_file):
 
     # Extract target content (example: extracting all paragraphs)
     content = '\n'.join(p.text for p in soup.find_all('p'))
-
+    
    # Convert to Markdown (simple example)
     markdown_content = f"## Extracted Content\n\n{content}"
 
