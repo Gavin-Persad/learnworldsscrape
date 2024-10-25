@@ -28,6 +28,8 @@ def login_and_scrape(url, output_file):
     # Adjust path to your ChromeDriver executable
     service = Service(chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
+    
+    # Navigate to the login page
     driver.get(login_url)
 
     # Wait until the "Sign In" button is clickable and then click it
@@ -53,70 +55,31 @@ def login_and_scrape(url, output_file):
     # Wait for the page to load after login
     time.sleep(5)  # Adjust the sleep time as needed
 
-
     # Navigate to the target page after logging in
     driver.get(url)
     time.sleep(20)  # Wait for the page to load
 
+    # Switch to the iframe containing the content
     iframe = WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.TAG_NAME, 'iframe'))
     )
     driver.switch_to.frame(iframe)
 
+    # Get the iframe source
     iframe_source = driver.page_source
-
-    # Get the page source
-    page_source = driver.page_source
 
     # Parse the HTML with BeautifulSoup
     soup = BeautifulSoup(iframe_source, 'html.parser')
 
-       # Find the specific <div> with the class and ID
+    # Find the specific <div> with the class and ID
     target_div = soup.find('div', {'id': 'pageContent'})
     if target_div:
         # Extract the inner text of the specific <div>
         inner_text = target_div.get_text(separator='\n', strip=True)
-
-    # Extract the inner text of the HTML
-    # inner_text = soup.get_text(separator='\n', strip=True)
-    # Save the inner text to a file
-    with open(output_file, 'w', encoding='utf-8') as text_file:
-        text_file.write(inner_text)
-
-        # Optional: Save prettified HTML to a file for debugging
-    with open('pretty_output.html', 'w', encoding='utf-8') as html_file:
-        html_file.write(soup.prettify())
-   
-
-     # Extract target content (example: extracting all paragraphs)
-    # content = '\n'.join(p.text for p in soup.find_all('p'))
-    
-
-    # content = soup.prettify()
-    # # Extract all elements individually with tag names and attributes
-    # elements = []
-    # for element in soup.find_all(True):  # True finds all tags
-    #     tag_name = element.name
-    #     attributes = element.attrs
-    #     inner_text = element.get_text(strip=True)
-    #     elements.append({
-    #         "tag": tag_name,
-    #         "attributes": attributes,
-    #         "text": inner_text
-    #     })
-
-# Convert each element to a string format and join them
-    # content = '\n'.join([f"<{el['tag']} {el['attributes']}>{el['text']}</{el['tag']}>" for el in elements])
-
-    # Extract the CSRF token from the meta tag within the head
-    csrf_meta = soup.find('meta', {'name': 'csrf-token'})
-    if csrf_meta:
-        csrf_token = csrf_meta['content']
     else:
-        raise ValueError("CSRF token not found")
+        raise ValueError("Target <div> not found")
 
-    
-   # Convert to Markdown (simple example)
+    # Convert to Markdown (simple example)
     markdown_content = f"## Extracted Content\n\n{inner_text}"
 
     # Save to an MDX file with front matter
@@ -130,10 +93,10 @@ def login_and_scrape(url, output_file):
     with open('pretty_output.html', 'w', encoding='utf-8') as html_file:
         html_file.write(soup.prettify())
 
-    #close Selenium
+    # Close Selenium
     driver.quit()
 
-    print("Content extracted and saved to output.mdx")
+    print(f"Content extracted and saved to {output_file}")
 
 # Usage
 login_and_scrape(
