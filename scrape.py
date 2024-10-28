@@ -28,6 +28,8 @@ def login_and_scrape(url, output_file):
     # Adjust path to your ChromeDriver executable
     service = Service(chromedriver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
+    
+    # Navigate to the login page
     driver.get(login_url)
 
     # Wait until the "Sign In" button is clickable and then click it
@@ -55,27 +57,30 @@ def login_and_scrape(url, output_file):
 
     # Navigate to the target page after logging in
     driver.get(url)
-    time.sleep(5)  # Wait for the page to load
+    time.sleep(20)  # Wait for the page to load
 
-    # Get the page source and close Selenium
-    page_source = driver.page_source
-    driver.quit()
+    # Switch to the iframe containing the content
+    iframe = WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((By.TAG_NAME, 'iframe'))
+    )
+    driver.switch_to.frame(iframe)
+
+    # Get the iframe source
+    iframe_source = driver.page_source
 
     # Parse the HTML with BeautifulSoup
-    soup = BeautifulSoup(page_source, 'html.parser')
+    soup = BeautifulSoup(iframe_source, 'html.parser')
 
-    # Extract the CSRF token from the meta tag within the head
-    csrf_meta = soup.find('meta', {'name': 'csrf-token'})
-    if csrf_meta:
-        csrf_token = csrf_meta['content']
+    # Find the specific <div> with the class and ID
+    target_div = soup.find('div', {'id': 'pageContent'})
+    if target_div:
+        # Extract the inner text of the specific <div>
+        inner_text = target_div.get_text(separator='\n', strip=True)
     else:
-        raise ValueError("CSRF token not found")
+        raise ValueError("Target <div> not found")
 
-    # Extract target content (example: extracting all paragraphs)
-    content = '\n'.join(p.text for p in soup.find_all('p'))
-
-   # Convert to Markdown (simple example)
-    markdown_content = f"## Extracted Content\n\n{content}"
+    # Convert to Markdown (simple example)
+    markdown_content = f"## Extracted Content\n\n{inner_text}"
 
     # Save to an MDX file with front matter
     with open(output_file, 'w', encoding='utf-8') as mdx_file:
@@ -88,10 +93,13 @@ def login_and_scrape(url, output_file):
     with open('pretty_output.html', 'w', encoding='utf-8') as html_file:
         html_file.write(soup.prettify())
 
-    print("Content extracted and saved to output.mdx")
+    # Close Selenium
+    driver.quit()
+
+    print(f"Content extracted and saved to {output_file}")
 
 # Usage
 login_and_scrape(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-on&unit=6681516e59b7881aa000042cUnit', 
+    'https://learn.schoolofcode.co.uk/path-player?courseid=lrn-achievements&unit=667536b302a6de374f0187f9Unit', 
     'output.mdx'  
 )
