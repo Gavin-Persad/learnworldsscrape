@@ -33,6 +33,14 @@ PASSWORD=your_password
 CHROMEDRIVER_PATH=path_to_your_chromedriver
 ```
 
+4. For Mac users only
+
+If you run into an issue accessing chrome driver run the following command:
+
+```
+xattr -d com.apple.quarantine chromedriver
+```
+
 ## Usage
 
 1. Open a terminal and navigate to the project directory.
