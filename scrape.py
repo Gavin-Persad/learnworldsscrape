@@ -59,28 +59,28 @@ def login_and_scrape(url, output_file):
     driver.get(url)
     time.sleep(20)  # Wait for the page to load
 
-    # Switch to the iframe containing the content
-    iframe = WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.TAG_NAME, 'iframe'))
+    # Switch to the iframe first in Selenium
+    iframe = WebDriverWait(driver, 40).until(
+        EC.presence_of_element_located((By.ID, 'playerFrame'))  # Ensure this ID matches exactly
     )
     driver.switch_to.frame(iframe)
 
-    # Get the iframe source
+    # Get the iframe's page source and parse it with BeautifulSoup
     iframe_source = driver.page_source
-
-    # Parse the HTML with BeautifulSoup
     soup = BeautifulSoup(iframe_source, 'html.parser')
 
-    # Find the specific <div> with the class and ID
-    target_div = soup.find('div', {'id': 'pageContent'})
-    if target_div:
-        # Extract the inner text of the specific <div>
-        inner_text = target_div.get_text(separator='\n', strip=True)
+    # Now locate the target <div> inside the iframe content
+    inner_content = soup.body  # Assuming content is within <body> tag
+
+    if inner_content:
+        # Extract and clean up all content as text, maintaining structure
+        content = inner_content.get_text(separator='\n', strip=True)
+        print(content)  # Print or save it as needed
     else:
-        raise ValueError("Target <div> not found")
+        raise ValueError("Content within iframe not found")
 
     # Convert to Markdown (simple example)
-    markdown_content = f"## Extracted Content\n\n{inner_text}"
+    markdown_content = f"## Extracted Content\n\n{inner_content}"
 
     # Save to an MDX file with front matter
     with open(output_file, 'w', encoding='utf-8') as mdx_file:
@@ -100,6 +100,6 @@ def login_and_scrape(url, output_file):
 
 # Usage
 login_and_scrape(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=lrn-achievements&unit=667536b302a6de374f0187f9Unit', 
+    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-we&unit=66b4c307c0dc4aaa0f0cdfbbUnit', 
     'output.mdx'  
 )
