@@ -37,26 +37,29 @@ def scrape_page(driver, output_folder):
     
     # Extract title for filename
     page_title = soup.find('title').get_text(strip=True)
-    filename = f"{output_folder}/{page_title.replace(' ', '_')}.mdx"
+    markdown_filename = f"{output_folder}/{page_title.replace(' ', '_')}.mdx"
+    html_filename = f"{output_folder}/{page_title.replace(' ', '_')}.html"
     
     # Extract text content and save as Markdown
     if inner_content:
         content = inner_content.get_text(separator='\n', strip=True)
         markdown_content = f"## {page_title}\n\n{content}"
         
-        with open(filename, 'w', encoding='utf-8') as mdx_file:
+        with open(markdown_filename, 'w', encoding='utf-8') as mdx_file:
             mdx_file.write('---\n')
             mdx_file.write(f'title: "{page_title}"\n')
             mdx_file.write('---\n\n')
             mdx_file.write(markdown_content)
     
     # Optional: Save prettified HTML to a file for debugging
-    with open('pretty_output.html', 'w', encoding='utf-8') as html_file:
+    with open(html_filename, 'w', encoding='utf-8') as html_file:
         html_file.write(soup.prettify())
+        html_file.write(f'title: "{page_title}"\n')
+        html_file.write(str(soup))
 
     # Switch back to the main page
     driver.switch_to.default_content()
-    print(f"Content for '{page_title}' saved to {filename}")
+    print(f"Content for '{page_title}' saved to {markdown_filename}")
 
 def navigate_and_scrape_all_pages(url, output_folder):
     login_url = os.getenv('LOGIN_URL')
@@ -103,6 +106,6 @@ output_folder = "scraped_content"  # Folder to save all scraped pages
 os.makedirs(output_folder, exist_ok=True)
 
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-we&unit=66b4c307c0dc4aaa0f0cdfbbUnit', 
+    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-we&unit=66b4c30ac0dc4aaa0f0cdfc7Unit', 
     output_folder
 )

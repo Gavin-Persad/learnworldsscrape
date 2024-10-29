@@ -5,3 +5,4 @@ pretty_output.html
 chromedriver
 .DS_Store
 .venv
+/scraped_content
