@@ -16,13 +16,24 @@ These dependencies are listed in the `requirements.txt` file.
 
 1. Clone the repository to your local machine.
 2. Navigate to the project directory.
-3. Install the required dependencies using pip:
+3. Create a virtual environment.
+
+```bash
+  pip install virtualenv
+  python -m venv venv
+```
+
+3. Install chrome driver:
+
+https://developer.chrome.com/docs/chromedriver/downloads
+
+4. Install the required dependencies using pip:
 
 ```bash
   pip install -r requirements.txt
 ```
 
-4. Environment Variables
+5. Environment Variables
 
 Create a `.env` file in the project directory with the following environment variables:
 
@@ -33,7 +44,7 @@ PASSWORD=your_password
 CHROMEDRIVER_PATH=path_to_your_chromedriver
 ```
 
-4. For Mac users only
+6. For Mac users only
 
 If you run into an issue accessing chrome driver run the following command:
 
