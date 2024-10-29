@@ -1,6 +1,6 @@
 /venv
 .env
-output.md
+output.mdx
 pretty_output.html
 chromedriver
 .DS_Store
