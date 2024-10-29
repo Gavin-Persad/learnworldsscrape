@@ -79,6 +79,8 @@ def navigate_and_scrape_all_pages(url, output_folder):
     # Navigate to the first page
     driver.get(url)
     time.sleep(5)  # Adjust as needed for loading
+    # Keep track of the current page
+    current_page = 1
     
     # Loop through all pages
     while True:
@@ -91,6 +93,8 @@ def navigate_and_scrape_all_pages(url, output_folder):
                 EC.element_to_be_clickable((By.XPATH, "//span[text()='Next']"))
             )
             next_button.click()
+            current_page += 1
+            print(f"Navigated to page {current_page}")
             time.sleep(5)  # Wait for the next page to load
             
         except Exception as e:
@@ -106,6 +110,6 @@ output_folder = "scraped_content"  # Folder to save all scraped pages
 os.makedirs(output_folder, exist_ok=True)
 
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-we&unit=66b4c30ac0dc4aaa0f0cdfc7Unit', 
+    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-we&unit=66b4c307c0dc4aaa0f0cdfb9Unit', 
     output_folder
 )
