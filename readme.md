@@ -1,6 +1,6 @@
 # Web Scraping Script
 
-This script logs into a specified website, navigates to a target page, and extracts the inner text of a specific `<div>` element. The extracted content is then saved as an MDX file with front matter.
+This script logs into a specified website, navigates to a target page, and extracts the inner text of a specific `<div>` element. The extracted content is then saved as MDX and HTML files with front matter.
 
 ## Dependencies
 
@@ -18,60 +18,57 @@ These dependencies are listed in the `requirements.txt` file.
 2. Navigate to the project directory.
 3. Create a virtual environment.
 
-```bash
-  pip install virtualenv
-  python -m venv venv
-```
+    ```bash
+    pip install virtualenv
+    python -m venv venv
+    ```
 
-3. Install chrome driver:
+4. Install ChromeDriver:
+    https://developer.chrome.com/docs/chromedriver/downloads
 
-https://developer.chrome.com/docs/chromedriver/downloads
+5. Install the required dependencies using pip:
 
-4. Install the required dependencies using pip:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-```bash
-  pip install -r requirements.txt
-```
+6. Create a `.env` file in the project directory with the following environment variables:
 
-5. Environment Variables
+    ```env
+    LOGIN_URL=your_login_url
+    USERNAME=your_username
+    PASSWORD=your_password
+    CHROMEDRIVER_PATH=path_to_your_chromedriver
+    ```
 
-Create a `.env` file in the project directory with the following environment variables:
+7. For Mac users only:
+    If you run into an issue accessing ChromeDriver, run the following command:
 
-```env
-LOGIN_URL=your_login_url
-USERNAME=your_username
-PASSWORD=your_password
-CHROMEDRIVER_PATH=path_to_your_chromedriver
-```
-
-6. For Mac users only
-
-If you run into an issue accessing chrome driver run the following command:
-
-```
-xattr -d com.apple.quarantine chromedriver
-```
+    ```bash
+    xattr -d com.apple.quarantine chromedriver
+    ```
 
 ## Usage
 
 1. Open a terminal and navigate to the project directory.
 2. Run the script using Python:
 
-```bash
-python scrape.py
-```
+    ```bash
+    python scrape.py
+    ```
 
-The script will log into the specified website, navigate to the target page, and extract the inner text of the specified `<div>` element.
-The extracted content will be saved as an MDX file named `output.mdx` in the project directory.
+    The script will log into the specified website, navigate to the target page, and extract the inner text of the specified `<div>` element. The extracted content will be saved as MDX and HTML files in the `scraped_content` directory.
 
 ## Output
 
-The extracted content will be saved in a file named `output.mdx` in the project directory. - Additionally, a prettified HTML file named `pretty_output.html` will be saved in the project directory for debugging purposes.
+The extracted content will be saved in the `scraped_content` directory with filenames based on the page titles. Each page will have both an MDX file and an HTML file for debugging purposes.
 
-## Example To run the script, use the following command:
+## Example
+
+To run the script, use the following command:
 
 ```bash
 python scrape.py
-
-This will execute the script and save the extracted content to output.mdx.
 ```
+
+This will execute the script and save the extracted content to the `scraped_content` directory.
