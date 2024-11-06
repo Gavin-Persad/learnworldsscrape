@@ -124,6 +124,6 @@ output_folder = "scraped_content"  # Folder to save all scraped pages
 os.makedirs(output_folder, exist_ok=True)
 
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-we&unit=66b4c307c0dc4aaa0f0cdfb9Unit', 
+    'https://learn.schoolofcode.co.uk/path-player?courseid=ai-and-data-experience-bc-17&unit=66e2e3d9366f76d2290fda40Unit', 
     output_folder
 )

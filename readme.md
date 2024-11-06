@@ -50,6 +50,18 @@ These dependencies are listed in the `requirements.txt` file.
 
 ## Usage
 
+At the bottom of the scrape.py file there is a `navigate_and_scrape_all_pages` function being called. Within this function, input the chosen URL for the module you want to scrape into the '' (single quotations). This URL will be the starting point, and the script will scrape this page then crawl and scrape any other page after it within the module.
+
+### Example
+```
+navigate_and_scrape_all_pages(
+    'https://learn.schoolofcode.co.uk/path-player?courseid=ai-and-data-experience-bc-17&unit=66e2e3d9366f76d2290fda40Unit', 
+    output_folder
+)
+```
+
+After selecting your chosen URL:
+
 1. Open a terminal and navigate to the project directory.
 2. Run the script using Python:
 
