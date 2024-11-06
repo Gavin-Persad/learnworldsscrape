@@ -61,6 +61,11 @@ def scrape_page(driver, output_folder):
     driver.switch_to.default_content()
     print(f"Content for '{page_title}' saved to {markdown_filename}")
 
+def take_screenshot(driver, output_folder, page_number):
+    screenshot_path = os.path.join(output_folder, f"page_{page_number}.png")
+    driver.save_screenshot(screenshot_path)
+    print(f"Screenshot saved to {screenshot_path}")
+
 def navigate_and_scrape_all_pages(url, output_folder):
     login_url = os.getenv('LOGIN_URL')
     username = os.getenv('USERNAME')
@@ -84,14 +89,23 @@ def navigate_and_scrape_all_pages(url, output_folder):
     
     # Loop through all pages
     while True:
+                
+        
         # Scrape current page
         scrape_page(driver, output_folder)
         
         try:
+            # Switch back to the main page
+            driver.switch_to.default_content()
+            # Take a screenshot of the current page
+            take_screenshot(driver, output_folder, current_page)
+
             # Click the "Next" button
-            next_button = WebDriverWait(driver, 20).until(
-                EC.element_to_be_clickable((By.XPATH, "//span[text()='Next']"))
-            )
+            print("Looking for the 'Next' button...")
+            next_button = WebDriverWait(driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'default-course-player-nav-btn-lbl') and contains(text(), 'next')]"))
+)
+            print("Found the 'Next' button, clicking it...")
             next_button.click()
             current_page += 1
             print(f"Navigated to page {current_page}")
@@ -99,7 +113,7 @@ def navigate_and_scrape_all_pages(url, output_folder):
             
         except Exception as e:
             # If "Next" button is not found or clickable, assume end of pages
-            print("End of pages or 'Next' button not found.")
+            print(f"End of pages or 'Next' button not found. Exception: {e}")
             break
     
     driver.quit()
