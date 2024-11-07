@@ -75,7 +75,7 @@ After selecting your chosen URL:
 
 ## Output
 
-The extracted content will be saved in the `scraped_content` directory with filenames based on the page titles. Each page will have both an MDX file and an HTML file for debugging purposes.
+The extracted content will be saved in the `scraped_content` directory in a folder with the course id and numbered files with filenames based on the page titles. Each page will have both an MDX file and an HTML file for debugging purposes.
 
 ## Example
 
