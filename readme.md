@@ -56,8 +56,7 @@ At the bottom of the scrape.py file there is a `navigate_and_scrape_all_pages` f
 
 ```
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=ai-and-data-experience-bc-17&unit=66e2e3d9366f76d2290fda40Unit',
-    output_folder
+    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-do&unit=66cd93eeb629e3e0870b8b89Unit'
 )
 ```
 
