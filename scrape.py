@@ -79,8 +79,6 @@ def scrape_page(driver, output_folder, page_number):
     # Optional: Save prettified HTML to a file for debugging
     with open(html_filename, 'w', encoding='utf-8') as html_file:
         html_file.write(soup.prettify())
-        html_file.write(f'title: "{page_title}"\n')
-        html_file.write(str(soup))
 
     # Switch back to the main page
     driver.switch_to.default_content()
@@ -164,5 +162,5 @@ def navigate_and_scrape_all_pages(url):
 
     
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-do&unit=66cd93eeb629e3e0870b8b89Unit'
+    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-cs&unit=66de0662d82121dc130ec423Unit'
 )
