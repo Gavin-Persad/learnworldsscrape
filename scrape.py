@@ -8,6 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+import re
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,12 +25,32 @@ def login(driver, login_url, username, password):
     driver.find_element(By.CLASS_NAME, '-login-but').click()
     time.sleep(5)  # Adjust as needed for loading
 
+def clean_mdx_file(file_path):
+    # Define the start and end phrases
+    start_phrase = "Learn to code, change your life!"
+    end_phrase = "Cookie preferences"
+    
+    # Read the content of the MDX file
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+    
+    # Use regular expressions to remove everything between the start and end phrases
+    pattern = re.compile(re.escape(start_phrase) + r'.*?' + re.escape(end_phrase), re.DOTALL)
+    cleaned_content = re.sub(pattern, '', content)
+    
+    # Save the cleaned content back to the MDX file
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.write(cleaned_content)
+
 def scrape_page(driver, output_folder, page_number):
     # Locate the iframe and switch to it
     iframe = WebDriverWait(driver, 40).until(
         EC.presence_of_element_located((By.ID, 'playerFrame'))
     )
     driver.switch_to.frame(iframe)
+    
+    # Get iframe content as a string
+    html_content = driver.page_source
     
     # Parse iframe content
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -61,6 +82,9 @@ def scrape_page(driver, output_folder, page_number):
     # Switch back to the main page
     driver.switch_to.default_content()
     print(f"Content for '{page_title}' saved to {markdown_filename}")
+    
+    # Clean the MDX file
+    clean_mdx_file(markdown_filename)
 
 # def take_screenshot(driver, output_folder, page_number):
 #     screenshot_path = os.path.join(output_folder, f"page_{page_number}.png")
