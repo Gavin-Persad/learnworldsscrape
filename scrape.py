@@ -1,5 +1,6 @@
 import time
 import os
+from urllib.parse import parse_qs, urlparse
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -12,6 +13,8 @@ import re
 
 # Load environment variables from .env file
 load_dotenv()
+
+
 
 def login(driver, login_url, username, password):
     # Navigate to the login page
@@ -91,7 +94,17 @@ def scrape_page(driver, output_folder, page_number):
 #     driver.save_screenshot(screenshot_path)
 #     print(f"Screenshot saved to {screenshot_path}")
 
-def navigate_and_scrape_all_pages(url, output_folder):
+def navigate_and_scrape_all_pages(url):
+    # Extract courseid from the URL
+    parsed_url = urlparse(url)
+    query_params = parse_qs(parsed_url.query)
+    courseid = query_params.get('courseid', [''])[0]
+    
+    # Create folder name based on courseid
+    folder_name = courseid
+    output_folder = os.path.join("scraped_content", folder_name)
+    os.makedirs(output_folder, exist_ok=True)   
+    
     login_url = os.getenv('LOGIN_URL')
     username = os.getenv('USERNAME')
     password = os.getenv('PASSWORD')
@@ -144,11 +157,12 @@ def navigate_and_scrape_all_pages(url, output_folder):
     driver.quit()
     print("All pages scraped.")
 
-# Usage
-output_folder = "scraped_content"  # Folder to save all scraped pages
-os.makedirs(output_folder, exist_ok=True)
+# # Usage
+# output_folder = "scraped_content"  # Folder to save all scraped pages
+# os.makedirs(output_folder, exist_ok=True)
 
+
+    
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=ai-and-data-experience-bc-17&unit=66e2e3d9366f76d2290fda40Unit', 
-    output_folder
+    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-do&unit=66cd93eeb629e3e0870b8b89Unit'
 )
