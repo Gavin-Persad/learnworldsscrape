@@ -88,10 +88,12 @@ python scrape.py
 
 This will execute the script and save the extracted content to the `scraped_content` directory.
 
-Created by:
+## Contributors
+
 School of Code Fellows
-Alexander Carr (Bootcamp 15) [linkedin](https://www.linkedin.com/in/alexander-carr-424591144/)
-Annamaria Koutsoras (Bootcamp 16) [linkedin](https://www.linkedin.com/in/annamariakou/)
-Arseniy Panin (Bootcamp 16) [linkedin](https://www.linkedin.com/in/arseniy-panin-a6583a161/)
-Gavin Persad (Bootcamp 16) [linkedin](https://www.linkedin.com/in/gavin-persad/)
-Winnie Lau (Bootcamp 16) [linkedin](https://www.linkedin.com/in/lau-winnie)
+
+- Alexander Carr (Bootcamp 15) [LinkedIn](https://www.linkedin.com/in/alexander-carr-424591144/)
+- Annamaria Koutsoras (Bootcamp 16) [LinkedIn](https://www.linkedin.com/in/annamariakou/)
+- Arseniy Panin (Bootcamp 16) [LinkedIn](https://www.linkedin.com/in/arseniy-panin-a6583a161/)
+- Gavin Persad (Bootcamp 16) [LinkedIn](https://www.linkedin.com/in/gavin-persad/)
+- Winnie Lau (Bootcamp 16) [LinkedIn](https://www.linkedin.com/in/lau-winnie)
