@@ -72,6 +72,8 @@ After selecting your chosen URL:
 
    The script will log into the specified website, navigate to the target page, and extract the inner text of the specified `<div>` element. The extracted content will be saved as MDX and HTML files in the `scraped_content` directory.
 
+3. Press `ctl c` to terminate the process any time.
+
 ## Output
 
 The extracted content will be saved in the `scraped_content` directory with filenames based on the page titles. Each page will have both an MDX file and an HTML file for debugging purposes.

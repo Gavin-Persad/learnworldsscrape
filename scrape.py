@@ -62,10 +62,10 @@ def scrape_page(driver, output_folder, page_number):
     driver.switch_to.default_content()
     print(f"Content for '{page_title}' saved to {markdown_filename}")
 
-def take_screenshot(driver, output_folder, page_number):
-    screenshot_path = os.path.join(output_folder, f"page_{page_number}.png")
-    driver.save_screenshot(screenshot_path)
-    print(f"Screenshot saved to {screenshot_path}")
+# def take_screenshot(driver, output_folder, page_number):
+#     screenshot_path = os.path.join(output_folder, f"page_{page_number}.png")
+#     driver.save_screenshot(screenshot_path)
+#     print(f"Screenshot saved to {screenshot_path}")
 
 def navigate_and_scrape_all_pages(url, output_folder):
     login_url = os.getenv('LOGIN_URL')
@@ -99,7 +99,7 @@ def navigate_and_scrape_all_pages(url, output_folder):
             # Switch back to the main page
             driver.switch_to.default_content()
             # Take a screenshot of the current page
-            take_screenshot(driver, output_folder, current_page)
+            # take_screenshot(driver, output_folder, current_page)
 
             # Click the "Next" button
             print("Looking for the 'Next' button...")
