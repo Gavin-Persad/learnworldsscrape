@@ -24,7 +24,7 @@ def login(driver, login_url, username, password):
     driver.find_element(By.CLASS_NAME, '-login-but').click()
     time.sleep(5)  # Adjust as needed for loading
 
-def scrape_page(driver, output_folder):
+def scrape_page(driver, output_folder, page_number):
     # Locate the iframe and switch to it
     iframe = WebDriverWait(driver, 40).until(
         EC.presence_of_element_located((By.ID, 'playerFrame'))
@@ -37,8 +37,9 @@ def scrape_page(driver, output_folder):
     
     # Extract title for filename
     page_title = soup.find('title').get_text(strip=True)
-    markdown_filename = f"{output_folder}/{page_title.replace(' ', '_')}.mdx"
-    html_filename = f"{output_folder}/{page_title.replace(' ', '_')}.html"
+    sanitized_title = page_title.replace(' ', '_').replace('/', '_')
+    markdown_filename = f"{output_folder}/{page_number:03d}_{sanitized_title}.mdx"
+    html_filename = f"{output_folder}/{page_number:03d}_{sanitized_title}.html"
     
     # Extract text content and save as Markdown
     if inner_content:
@@ -92,7 +93,7 @@ def navigate_and_scrape_all_pages(url, output_folder):
                 
         
         # Scrape current page
-        scrape_page(driver, output_folder)
+        scrape_page(driver, output_folder, current_page)
         
         try:
             # Switch back to the main page
