@@ -45,7 +45,7 @@ def clean_mdx_file(file_path):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(cleaned_content)
 
-def scrape_page(driver, output_folder, page_number):
+def scrape_page(driver, html_folder, mdx_folder, page_number):
     # Locate the iframe and switch to it
     iframe = WebDriverWait(driver, 40).until(
         EC.presence_of_element_located((By.ID, 'playerFrame'))
@@ -62,8 +62,8 @@ def scrape_page(driver, output_folder, page_number):
     # Extract title for filename
     page_title = soup.find('title').get_text(strip=True)
     sanitized_title = page_title.replace(' ', '_').replace('/', '_')
-    markdown_filename = f"{output_folder}/{page_number:03d}_{sanitized_title}.mdx"
-    html_filename = f"{output_folder}/{page_number:03d}_{sanitized_title}.html"
+    markdown_filename = f"{mdx_folder}/{page_number:03d}_{sanitized_title}.mdx"
+    html_filename = f"{html_folder}/{page_number:03d}_{sanitized_title}.html"
     
     # Extract text content and save as Markdown
     if inner_content:
@@ -79,7 +79,6 @@ def scrape_page(driver, output_folder, page_number):
     # Optional: Save prettified HTML to a file for debugging
     with open(html_filename, 'w', encoding='utf-8') as html_file:
         html_file.write(soup.prettify())
-
     # Switch back to the main page
     driver.switch_to.default_content()
     print(f"Content for '{page_title}' saved to {markdown_filename}")
@@ -101,13 +100,18 @@ def navigate_and_scrape_all_pages(url):
     # Create folder name based on courseid
     folder_name = courseid
     output_folder = os.path.join("scraped_content", folder_name)
-    os.makedirs(output_folder, exist_ok=True)   
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # Create subfolders for .html and .mdx files
+    html_folder = os.path.join(output_folder, "html")
+    mdx_folder = os.path.join(output_folder, "mdx")
+    os.makedirs(html_folder, exist_ok=True)
+    os.makedirs(mdx_folder, exist_ok=True)
     
     login_url = os.getenv('LOGIN_URL')
     username = os.getenv('USERNAME')
     password = os.getenv('PASSWORD')
     chromedriver_path = os.getenv('CHROMEDRIVER_PATH')
-
     # Set up Selenium with ChromeOptions
     chrome_options = Options()
     chrome_options.add_argument("--headless")  # Run headless if needed
@@ -125,22 +129,17 @@ def navigate_and_scrape_all_pages(url):
     
     # Loop through all pages
     while True:
-                
-        
         # Scrape current page
-        scrape_page(driver, output_folder, current_page)
+        scrape_page(driver, html_folder, mdx_folder, current_page)
         
         try:
             # Switch back to the main page
             driver.switch_to.default_content()
-            # Take a screenshot of the current page
-            # take_screenshot(driver, output_folder, current_page)
-
             # Click the "Next" button
             print("Looking for the 'Next' button...")
             next_button = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'default-course-player-nav-btn-lbl') and contains(text(), 'next')]"))
-)
+                EC.element_to_be_clickable((By.XPATH, "//span[contains(@class, 'default-course-player-nav-btn-lbl') and contains(text(), 'next')]"))
+            )
             print("Found the 'Next' button, clicking it...")
             next_button.click()
             current_page += 1
@@ -162,5 +161,5 @@ def navigate_and_scrape_all_pages(url):
 
     
 navigate_and_scrape_all_pages(
-    'https://learn.schoolofcode.co.uk/path-player?courseid=bc17-cs&unit=66de0662d82121dc130ec423Unit'
+    'https://learn.schoolofcode.co.uk/path-player?courseid=ai-and-data-experience-bc-17&unit=66e2e3d9366f76d2290fda40Unit'
 )
